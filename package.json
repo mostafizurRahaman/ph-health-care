@@ -5,9 +5,18 @@
   "author": "Mostafizur",
   "license": "MIT",
   "scripts": {
-    "start:dev": "tsnd --respawn src/server.ts"
+    "start:dev": "tsnd --respawn src/server.ts",
+    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:generate": "npx prisma generate",
+    "prisma:push": "npx prisma push",
+    "prisma:pull": "npx prisma pull",
+    "prisma:format": "npx prisma format",
+    "prisma:studio": "npx prisma studio"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^22.3.0",
     "prisma": "^5.18.0",
@@ -16,6 +25,11 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
+    "@prisma/client": "^5.18.0",
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
+    "cookies": "^0.9.1",
+    "cors": "^2.8.5",
     "express": "^4.19.2"
   }
 }
