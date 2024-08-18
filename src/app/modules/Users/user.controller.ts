@@ -1,18 +1,24 @@
-//  Create Admin **
-
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { userServices } from "./user.services";
-import { IUser } from "./user.interface";
 
+//  Create Admin **
 const createAdmin = async (req: Request, res: Response, next: NextFunction) => {
-  const user = req.body;
-  console.log(user);
-  const result = await userServices.createAdmin(user);
-  
-  res.json({
-    result,
-  });
+  try {
+    const result = await userServices.createAdmin(req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "Admin Created Successfully",
+      data: result.admin,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
+
+
+
+
 
 export const userController = {
   createAdmin,
