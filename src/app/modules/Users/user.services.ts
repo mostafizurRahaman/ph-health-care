@@ -1,8 +1,7 @@
-import { PrismaClient, UserRole } from "@prisma/client";
+import { UserRole } from "@prisma/client";
 import { IAdmin, IAdminData, IUser } from "./user.interface";
 import hashPassword from "../../utils/hashPassword";
-
-const prisma = new PrismaClient();
+import prisma from "../../../shared/prisma";
 
 //  Create Users **
 const createAdmin = async (payload: IAdminData) => {
