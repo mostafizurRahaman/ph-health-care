@@ -6,7 +6,7 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { adminService } from "./admin.services";
 import { adminFilterableFields } from "./admni.constsnt";
-
+import httpStatus from "http-status";
 // Get All Admins
 const getAdmins = catchAsync(async (req, res, next) => {
   const filter = pick(req.query, adminFilterableFields);
@@ -14,7 +14,7 @@ const getAdmins = catchAsync(async (req, res, next) => {
   const result = await adminService.getAllAdminFromDB(filter, options);
 
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     success: true,
     message: "Admins Are Retrieved Successfully!!!",
     meta: result.meta,
@@ -26,7 +26,7 @@ const getAdminByID = catchAsync(async (req, res, next) => {
   const result = await adminService.getAdminByIDFromDB(req.params.id);
 
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     success: true,
     message: "Admin Retrieved Successfully!!!",
     data: result,
@@ -39,7 +39,7 @@ const updateAdminByID = catchAsync(async (req, res, next) => {
   const result = await adminService.updateIntoDB(id, req.body);
 
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     success: true,
     message: "Admin Updated Successfully!!!",
     data: result,
@@ -54,7 +54,7 @@ const deleteAdminFromDB = catchAsync(async (req, res, next) => {
   const result = await adminService.deleteFromDBByID(id);
 
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     success: true,
     message: "Admin Deleted Successfully!!!",
     data: result,
@@ -69,7 +69,7 @@ const softDeleteAdminFromDB = catchAsync(async (req, res) => {
   const result = await adminService.softDeleteAdminFromDB(id);
 
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     success: true,
     message: "Admin Deleted Successfully!!!",
     data: result,
