@@ -11,19 +11,11 @@ const createAdmin = async (payload: IAdminData) => {
   const hashedPassword = await hashPassword(password, 13);
   console.log({ hashedPassword });
 
-  const isUserExists = await prisma.user.findUnique({
+  await prisma.user.findUniqueOrThrow({
     where: {
       email: admin.email,
     },
   });
-  console.log({
-    isUserExists,
-  });
-
-  //!  Check Is User Already Exists ?? **
-  if (isUserExists) {
-    throw new Error("User Already Exists!!!");
-  }
 
   const userData = {
     email: admin.email,
