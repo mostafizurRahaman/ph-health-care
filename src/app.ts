@@ -5,6 +5,7 @@ import cookiesParser from "cookie-parser";
 import notFound from "./app/middlewares/notFound";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 import { adminRoutes } from "./app/modules/Admin/admin.route";
+import { healthCareRoutes } from "./app/routes";
 const app: Application = express();
 
 // Global Middleware
@@ -20,9 +21,8 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-//  user Routes **
-app.use("/api/v1/user", userRoutes);
-app.use("/api/v1/admin", adminRoutes);
+//  All Routes **
+app.use("/api/v1", healthCareRoutes);
 
 // Not Found Route **
 app.use(notFound);

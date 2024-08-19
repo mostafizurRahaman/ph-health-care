@@ -3,6 +3,7 @@
 import pick from "../../../shared/pick";
 import { IPaginationConfig } from "../../interfaces/global";
 import catchAsync from "../../utils/catchAsync";
+import sendResponse from "../../utils/sendResponse";
 import { adminService } from "./admin.services";
 import { adminFilterableFields } from "./admni.constsnt";
 
@@ -12,9 +13,10 @@ const getAdmins = catchAsync(async (req, res, next) => {
   const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
   const result = await adminService.getAllAdminFromDB(filter, options);
 
-  res.status(200).json({
+  sendResponse(res, {
+    statusCode: 200,
     success: true,
-    message: "Admin Retrieved Successfully!!!",
+    message: "Admins Are Retrieved Successfully!!!",
     meta: result.meta,
     data: result.data,
   });
@@ -23,7 +25,8 @@ const getAdmins = catchAsync(async (req, res, next) => {
 const getAdminByID = catchAsync(async (req, res, next) => {
   const result = await adminService.getAdminByIDFromDB(req.params.id);
 
-  res.status(200).json({
+  sendResponse(res, {
+    statusCode: 200,
     success: true,
     message: "Admin Retrieved Successfully!!!",
     data: result,
@@ -35,9 +38,10 @@ const updateAdminByID = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const result = await adminService.updateIntoDB(id, req.body);
 
-  res.status(200).json({
+  sendResponse(res, {
+    statusCode: 200,
     success: true,
-    message: "Admin Updated Successfully!!",
+    message: "Admin Updated Successfully!!!",
     data: result,
   });
 });
@@ -49,9 +53,10 @@ const deleteAdminFromDB = catchAsync(async (req, res, next) => {
 
   const result = await adminService.deleteFromDBByID(id);
 
-  res.status(200).send({
+  sendResponse(res, {
+    statusCode: 200,
     success: true,
-    message: "Admin Deleted Successfully",
+    message: "Admin Deleted Successfully!!!",
     data: result,
   });
 });
@@ -63,7 +68,8 @@ const softDeleteAdminFromDB = catchAsync(async (req, res) => {
 
   const result = await adminService.softDeleteAdminFromDB(id);
 
-  res.status(200).json({
+  sendResponse(res, {
+    statusCode: 200,
     success: true,
     message: "Admin Deleted Successfully!!!",
     data: result,
