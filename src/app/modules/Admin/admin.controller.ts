@@ -1,7 +1,7 @@
 //  Get Admin Data **
 
 import pick from "../../../shared/pick";
-import { IPaginationConfig } from "../../interfaces/global";
+
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { adminService } from "./admin.services";

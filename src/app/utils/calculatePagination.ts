@@ -1,4 +1,4 @@
-import { IPaginationConfig } from "../interfaces/global";
+import { IPaginationOptions } from "../interfaces/pagination";
 
 interface IOptionsReturnType {
   page: number;
@@ -9,7 +9,7 @@ interface IOptionsReturnType {
 }
 
 const calculatePagination = (
-  options: IPaginationConfig
+  options: IPaginationOptions
 ): IOptionsReturnType => {
   const page = Number(options?.page) || 1;
   const limit = Number(options?.limit) || 10;

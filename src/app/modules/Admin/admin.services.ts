@@ -1,13 +1,14 @@
 import { Admin, Prisma, UserStatus } from "@prisma/client";
 import { adminSearchableFields } from "./admni.constsnt";
-import { IPaginationConfig } from "../../interfaces/global";
+
 import calculatePagination from "../../utils/calculatePagination";
 import prisma from "../../../shared/prisma";
+import { IPaginationOptions } from "../../interfaces/pagination";
 
 //   Get All Admins ** :
-const getAllAdminFromDB  = async (
+const getAllAdminFromDB = async (
   query: Record<string, unknown>,
-  options: IPaginationConfig
+  options: IPaginationOptions
 ) => {
   const { searchTerm, ...filterData } = query;
   const { limit, page, sortBy, sortOrder, skip } = calculatePagination(options);
@@ -72,7 +73,7 @@ const getAllAdminFromDB  = async (
 
 // ** Get Admin By ID **
 const getAdminByIDFromDB = async (id: string): Promise<Admin | null> => {
-  const admin = await prisma.admin.findUnique({
+  const admin = await prisma.admin.findUniqueOrThrow({
     where: {
       id,
       isDeleted: false,

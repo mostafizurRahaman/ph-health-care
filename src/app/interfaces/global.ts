@@ -1,10 +1,3 @@
-export interface IPaginationConfig {
-  page?: string;
-  limit?: string;
-  sortBy?: string;
-  sortOrder?: string;
-}
-
 export interface IMeta {
   limit: number;
   page: number;
