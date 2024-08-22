@@ -88,7 +88,7 @@ const refreshToken = async (refreshToken: string) => {
 const changePassword = async (
   oldPassword: string,
   newPassword: string,
-  user: IReqUser
+  user?: any
 ) => {
   const isUserExists = await prisma.user.findUniqueOrThrow({
     where: {
@@ -126,8 +126,32 @@ const changePassword = async (
   return updatedUser;
 };
 
+const forgotPassword = async (email: string) => {
+  const isUserExists = await prisma.user.findUniqueOrThrow({
+    where: {
+      email,
+      status: UserStatus.ACTIVE,
+    },
+  });
+
+  const userPayload = {
+    email: isUserExists.email,
+    role: isUserExists.role,
+  };
+
+  const resetToken = createJWTToken(
+    userPayload,
+    configs.reset_password_secret as string,
+    configs.reset_expires_in as string
+  );
+
+  const resetPassLink = `${config.reset_password_link}?email=${isUserExists?.email}&token=${resetToken}`;
+
+  return resetPassLink;
+};
 export const authServices = {
   userLogin,
   refreshToken,
   changePassword,
+  forgotPassword,
 };

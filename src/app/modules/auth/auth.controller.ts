@@ -3,6 +3,8 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { authServices } from "./auth.services";
 import config from "../../configs";
+import { Request } from "express";
+import { JwtPayload } from "jsonwebtoken";
 
 const Login = catchAsync(async (req, res) => {
   const { refreshToken, ...others } = await authServices.userLogin(req.body);
@@ -38,21 +40,34 @@ const refreshToken = catchAsync(async (req, res) => {
   });
 });
 
-const changedPassword = catchAsync(async (req, res) => {
-  // @ts-ignore
-  const user = req.user;
-  const { oldPassword, newPassword } = req.body;
-  const result = await authServices.changePassword(
-    oldPassword,
-    newPassword,
-    user
-  );
+const changedPassword = catchAsync(
+  async (req: Request & { user?: any }, res) => {
+    const user = req.user;
+    const { oldPassword, newPassword } = req.body;
+    const result = await authServices.changePassword(
+      oldPassword,
+      newPassword,
+      user
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Password Changed Sucessfully!!!",
+      data: null,
+    });
+  }
+);
+
+const forgetPassword = catchAsync(async (req, res) => {
+  const { email } = req.body;
+  const result = await authServices.forgotPassword(email);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Password Changed Sucessfully!!!",
-    data: null,
+    message: "Check Your Email!!!",
+    data: result,
   });
 });
 
@@ -60,4 +75,5 @@ export const authController = {
   Login,
   refreshToken,
   changedPassword,
+  forgetPassword,
 };

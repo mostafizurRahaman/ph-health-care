@@ -8,7 +8,11 @@ import AppError from "../errors/AppError";
 import httpStatus from "http-status";
 
 const auth = (...roles: UserRole[]) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (
+    req: Request & { user?: any },
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       //  Get Token From Headers **
       const token = req.headers?.authorization?.split(" ")[1];
@@ -38,7 +42,7 @@ const auth = (...roles: UserRole[]) => {
       }
 
       //  Set Payload to Request ::
-      //@ts-ignore
+
       req.user = payload;
 
       next();

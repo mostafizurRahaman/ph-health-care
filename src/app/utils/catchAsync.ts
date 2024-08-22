@@ -1,6 +1,7 @@
 //  CatchAsync Function -==> For Removing Repetition of Try Catch **
 
 import { NextFunction, Request, RequestHandler, Response } from "express";
+import { JwtPayload } from "jsonwebtoken";
 
 const catchAsync = (fn: RequestHandler) => {
   return (req: Request, res: Response, next: NextFunction) => {

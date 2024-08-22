@@ -13,4 +13,7 @@ export default {
   bcrypt_slat_round: process.env.BCRYPT_SOLT_ROUND,
   access_token_expiresIn: process.env.Access_Token_ExpiresIn,
   refresh_token_expiresIn: process.env.Refresh_Token_ExpiresIn,
+  reset_password_secret: process.env.REFRESH_TOKEN_SECRET,
+  reset_expires_in: process.env.RESET_EXPIRES_IN,
+  reset_password_link: process.env.RESET_PASSWORD_LINK,
 };
