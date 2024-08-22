@@ -2,6 +2,8 @@ import { UserRole } from "@prisma/client";
 import { IAdmin, IAdminData, IUser } from "./user.interface";
 import hashPassword from "../../utils/hashPassword";
 import prisma from "../../../shared/prisma";
+import AppError from "../../errors/AppError";
+import httpStatus from "http-status";
 
 //  Create Users **
 const createAdmin = async (payload: IAdminData) => {
@@ -18,7 +20,10 @@ const createAdmin = async (payload: IAdminData) => {
   });
 
   if (isExists) {
-    throw new Error("User Already Exists With This Email!!!");
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "User Already Exists With This Email!!!"
+    );
   }
 
   const userData = {

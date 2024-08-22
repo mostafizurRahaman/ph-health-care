@@ -7,6 +7,7 @@ import catchAsync from "../../utils/catchAsync";
 //  Create Admin **
 const createAdmin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+    // console.log(req?.user);
     const result = await userServices.createAdmin(req.body);
 
     sendResponse(res, {

@@ -1,4 +1,6 @@
+import httpStatus from "http-status";
 import jwt from "jsonwebtoken";
+import AppError from "../../errors/AppError";
 
 interface ITokePayload {
   email: string;
@@ -19,6 +21,6 @@ export const verifyToken = (token: string, secret: string) => {
     const isVerified = jwt.verify(token, secret);
     return isVerified;
   } catch (err) {
-    throw new Error("You Are not Authorized!!!");
+    throw new AppError(httpStatus.UNAUTHORIZED, "You are UnAuthorized!!!");
   }
 };

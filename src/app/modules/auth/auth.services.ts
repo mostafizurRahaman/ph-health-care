@@ -5,6 +5,8 @@ import config from "../../configs";
 import comparePassword from "../../utils/comparePassword";
 import { IUserLogin } from "./auth.interface";
 import { createJWTToken, verifyToken } from "./auth.utils";
+import AppError from "../../errors/AppError";
+import httpStatus from "http-status";
 
 //  User Login **
 const userLogin = async (payload: IUserLogin) => {
@@ -25,7 +27,7 @@ const userLogin = async (payload: IUserLogin) => {
 
   // check   Is Password Matched **
   if (!isPasswordMatched) {
-    throw new Error("You Credential Not Matched!!!");
+    throw new AppError(httpStatus.BAD_REQUEST,"You Credential Not Matched!!!");
   }
 
   const payloadData = {
