@@ -38,7 +38,8 @@ const auth = (...roles: UserRole[]) => {
       }
 
       //  Set Payload to Request ::
-      // req.user = payload;
+      //@ts-ignore
+      req.user = payload;
 
       next();
     } catch (err) {

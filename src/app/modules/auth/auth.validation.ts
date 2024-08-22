@@ -23,7 +23,21 @@ const refreshToken = z.object({
   }),
 });
 
+const changePasswordValidationSchema = z.object({
+  body: z.object({
+    oldPassword: z.string({
+      required_error: validationMessages.password.required,
+      invalid_type_error: validationMessages.password.invalid_type,
+    }),
+    newPassword: z.string({
+      required_error: validationMessages.password.required,
+      invalid_type_error: validationMessages.password.invalid_type,
+    }),
+  }),
+});
+
 export const authValidations = {
   loginValidation,
   refreshToken,
+  changePasswordValidationSchema,
 };
