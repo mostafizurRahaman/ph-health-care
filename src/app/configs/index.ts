@@ -16,4 +16,8 @@ export default {
   reset_password_secret: process.env.REFRESH_TOKEN_SECRET,
   reset_expires_in: process.env.RESET_EXPIRES_IN,
   reset_password_link: process.env.RESET_PASSWORD_LINK,
+  gmail_app_pass: process.env.GMAIL_APP_PASSWORD,
+  cloudinary_name: process.env.CLOUDINARY_NAME,
+  cloudinary_api_key: process.env.CLOUDINARY_API_KEY,
+  cloudinary_secret_key: process.env.CLOUDINARY_SECRET_KEY,
 };

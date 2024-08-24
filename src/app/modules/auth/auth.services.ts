@@ -10,6 +10,7 @@ import httpStatus from "http-status";
 import { IReqUser } from "../../interfaces/global";
 import { UserRole, UserStatus } from "@prisma/client";
 import hashPassword from "../../utils/hashPassword";
+import { sendEmail } from "../../utils/sendEmail";
 
 //  User Login **
 const userLogin = async (payload: IUserLogin) => {
@@ -147,11 +148,67 @@ const forgotPassword = async (email: string) => {
 
   const resetPassLink = `${config.reset_password_link}?email=${isUserExists?.email}&token=${resetToken}`;
 
-  return resetPassLink;
+  const result = await sendEmail(
+    isUserExists?.email,
+    `Reset Your Password WithIn 5 Min.`,
+    resetPassLink
+  );
+
+  return result;
 };
+
+const resetPassword = async (
+  token: string,
+  payload: { email: string; newPassword: string }
+) => {
+  if (!token) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Bad Request!!!");
+  }
+
+
+  //  Verify Token**
+  const user = verifyToken(token, configs.reset_password_secret as string) as JwtPayload;
+
+  
+  //  Get User Data By Using Token Info : email and role 
+  const isUserExists = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: user?.email,
+      role: user?.role,
+      status:UserStatus.ACTIVE
+    }
+  })
+  
+
+
+  //  Hash Password **
+  const password = await hashPassword(
+    payload.newPassword,
+    Number(configs.bcrypt_slat_round) as number
+  );
+
+  console.log(password)
+  
+  //  Reset Password : 
+  await prisma.user.update({
+      where: { 
+        email: user?.email
+    },
+    data: {
+      password
+    }
+    
+  })
+
+
+return 'Password Reset Successfully!!!'
+
+};
+
 export const authServices = {
   userLogin,
   refreshToken,
   changePassword,
   forgotPassword,
+  resetPassword,
 };

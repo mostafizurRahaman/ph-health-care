@@ -4,12 +4,15 @@ import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 
+
 //  Create Admin **
 const createAdmin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+    console.log({ file: req.file, body: req.body });
     // console.log(req?.user);
-    const result = await userServices.createAdmin(req.body);
+    const result = await userServices.createAdmin(req.body, req.file  );
 
+    
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -22,3 +25,7 @@ const createAdmin = catchAsync(
 export const userController = {
   createAdmin,
 };
+
+
+
+// 449044
