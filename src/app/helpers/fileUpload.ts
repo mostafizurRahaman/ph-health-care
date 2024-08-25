@@ -11,7 +11,7 @@ cloudinary.config({
   api_secret: configs.cloudinary_secret_key,
 });
 
-const sendImageToCloudinary = async (fileName: string, filePath: string) => {
+const sendImageToCloudinary = async (fileName: string, filePath: string) : Promise<UploadApiResponse> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       filePath,
@@ -28,7 +28,7 @@ const sendImageToCloudinary = async (fileName: string, filePath: string) => {
             if (err) {
               console.log(`From Unlink`, err);
             } else {
-              console.log(`Fil Uploaded Successfully!!`);
+              console.log(`File Uploaded Successfully!!`);
             }
           });
         }
