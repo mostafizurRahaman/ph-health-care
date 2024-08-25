@@ -13,6 +13,11 @@ export const UserStatus = {
   BLOCKED: "BLOCKED",
 } as const;
 
+
+export const userFilterableFields = ['email', 'role', 'status', 'searchTerm']
+export const userSearchableFields = ['email'];
+
+
 export type IUserRole = keyof typeof UserRole;
 
 export type IUserStatus = keyof typeof UserStatus;

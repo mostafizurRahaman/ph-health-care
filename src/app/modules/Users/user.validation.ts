@@ -1,4 +1,4 @@
-import { Gender } from "@prisma/client";
+import { Gender, UserStatus } from "@prisma/client";
 import { z } from "zod";
 import validationMessages from "../../configs/validationMesage";
 
@@ -119,8 +119,19 @@ const createPatient = z.object({
   }),
 });
 
+
+
+const changeUserStatus = z.object({
+    body: z.object({
+       status: z.enum([UserStatus.ACTIVE, UserStatus.BLOCKED, UserStatus.DELETED], {
+         message: "Role Should Be ACTIVE OR BLOCKED OR DELETED!!!"
+       })
+    })
+})
+
 export const userValidationSchema = {
   createAdminValidationSchema,
   createDoctor,
   createPatient,
+  changeUserStatus,
 };

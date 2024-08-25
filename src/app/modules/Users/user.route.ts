@@ -47,10 +47,26 @@ router.post(
       data: JSON.parse(req.body.data),
     });
     req.body = JSON.parse(req?.body?.data);
-    next()
+    next();
   },
-  validateRequest(userValidationSchema.createPatient), 
+  validateRequest(userValidationSchema.createPatient),
   userController.createPatient
+);
+
+//  get All users **
+
+router.get(
+  "/",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  userController.getAllUsers
+);
+
+//  Change User Status **
+router.patch(
+  "/:id/status",
+  validateRequest(userValidationSchema.changeUserStatus),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  userController.changeUserStatus
 );
 
 export const userRoutes = router;

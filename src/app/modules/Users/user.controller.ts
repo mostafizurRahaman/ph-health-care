@@ -3,6 +3,8 @@ import { userServices } from "./user.services";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
+import pick from "../../../shared/pick";
+import { userFilterableFields } from "./user.constraint";
 
 //  Create Admin **
 const createAdmin = catchAsync(async (req, res) => {
@@ -38,8 +40,40 @@ const createPatient = catchAsync(async (req, res) => {
   });
 });
 
+const getAllUsers = catchAsync(async (req, res, next) => {
+  const query = pick(req.query, userFilterableFields);
+  const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
+  console.log({ query, options });
+
+  const result = await userServices.getAllUsersFromDB(query, options);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "All User Retrieved Successfully!!!",
+    data: result,
+  });
+});
+
+
+
+const changeUserStatus = catchAsync(async(req,res) => {
+   
+const id = req.params.id; 
+ const result = await userServices.changeProfileStatus(id,req.body)
+sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "All User Retrieved Successfully!!!",
+    data: result,
+  });
+})
+ 
+
 export const userController = {
   createAdmin,
   createDoctor,
   createPatient,
+  getAllUsers,
+  changeUserStatus,
 };
