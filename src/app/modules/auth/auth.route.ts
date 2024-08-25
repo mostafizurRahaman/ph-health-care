@@ -21,7 +21,7 @@ router.post(
 
 router.post(
   "/changed-password",
-  auth(UserRole.ADMIN, UserRole.DOCTOR, UserRole.PAITENT),
+  auth(UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
   validateRequest(authValidations.changePasswordValidationSchema),
   authController.changedPassword
 );

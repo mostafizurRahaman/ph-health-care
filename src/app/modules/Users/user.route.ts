@@ -26,14 +26,31 @@ router.post(
 router.post(
   "/create-doctor",
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
-  fileUploadHelper.upload.single('file'),
+  fileUploadHelper.upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = JSON.parse(req.body.data);
     console.log(req.body);
-    next()
+    next();
   },
   validateRequest(userValidationSchema.createDoctor),
   userController.createDoctor
+);
+
+//  Create Patient **
+router.post(
+  "/create-patient",
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+  fileUploadHelper.upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    console.log({
+      file: req.file,
+      data: JSON.parse(req.body.data),
+    });
+    req.body = JSON.parse(req?.body?.data);
+    next()
+  },
+  validateRequest(userValidationSchema.createPatient), 
+  userController.createPatient
 );
 
 export const userRoutes = router;

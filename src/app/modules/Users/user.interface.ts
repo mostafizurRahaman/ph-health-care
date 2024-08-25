@@ -1,3 +1,4 @@
+import { Doctor, Patient } from "@prisma/client";
 import { IUserRole, IUserStatus } from "./user.constraint";
 
 export interface IUser {
@@ -21,6 +22,16 @@ export interface IAdminData {
   };
 }
 
+
+
+export interface IPaitentData { 
+  password: string, 
+  patient: Patient
+}
+export interface IDoctorData { 
+  password: string, 
+  doctor: Doctor
+}
 export interface IAdmin {
   id?: string;
   email: string;

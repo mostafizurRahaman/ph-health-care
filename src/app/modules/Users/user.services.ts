@@ -1,5 +1,11 @@
 import { Doctor, UserRole } from "@prisma/client";
-import { IAdmin, IAdminData, IUser } from "./user.interface";
+import {
+  IAdmin,
+  IAdminData,
+  IDoctorData,
+  IPaitentData,
+  IUser,
+} from "./user.interface";
 import hashPassword from "../../utils/hashPassword";
 import prisma from "../../../shared/prisma";
 import AppError from "../../errors/AppError";
@@ -31,19 +37,20 @@ const createAdmin = async (payload: IAdminData, file: any) => {
   }
 
   //  Image Upload :
-  const imageName = admin.email?.split("@")[0];
-  const { secure_url } = (await fileUploadHelper.sendImageToCloudinary(
-    imageName,
-    file.path
-  )) as UploadApiResponse;
+  if (file) {
+    const imageName = admin.email?.split("@")[0];
+    const { secure_url } = (await fileUploadHelper.sendImageToCloudinary(
+      imageName,
+      file.path
+    )) as UploadApiResponse;
+    admin.profilePhoto = secure_url;
+  }
 
   const userData = {
     email: admin.email,
     password: hashedPassword,
     role: UserRole.ADMIN,
   };
-
-  console.log(secure_url);
 
   const result = prisma.$transaction(async (tx) => {
     //  Create User **
@@ -53,7 +60,7 @@ const createAdmin = async (payload: IAdminData, file: any) => {
 
     //  Create Admin **
     const adminData = await tx.admin.create({
-      data: { ...admin, photoProfile: secure_url },
+      data: { ...admin },
     });
 
     return adminData;
@@ -62,7 +69,7 @@ const createAdmin = async (payload: IAdminData, file: any) => {
   return result;
 };
 
-const createDoctor = async (payload: any, file: any) => {
+const createDoctor = async (payload: IDoctorData, file: any) => {
   const { doctor, password } = payload;
 
   //  Check Is Doctor Exists With this email:
@@ -92,33 +99,97 @@ const createDoctor = async (payload: any, file: any) => {
     role: UserRole.DOCTOR,
   };
 
-
   //  Get User Profile Image Link **
-  const imageName = doctor?.email?.split('@')[0];
-  const { secure_url } = await fileUploadHelper.sendImageToCloudinary(imageName, file?.path)
+  if (file) {
+    const imageName = doctor?.email?.split("@")[0];
+    const { secure_url } = await fileUploadHelper.sendImageToCloudinary(
+      imageName,
+      file?.path
+    );
+    doctor.photoProfile = secure_url;
+  }
 
   const result = await prisma.$transaction(async (tx) => {
-    
-    //  Create User ** 
+    //  Create User **
     await tx.user.create({
       data: {
         ...userData,
       },
     });
 
-    //  Create Doctor** 
+    //  Create Doctor**
     const doctorData = await tx.doctor.create({
-      data: {...doctor, photoProfile: secure_url},
+      data: { ...doctor },
     });
 
     return doctorData;
   });
 
-
-  return result; 
+  return result;
 };
 
+const createPatient = async (payload: IPaitentData, file: any) => {
+  const { patient, password } = payload;
+
+  //  Check Is User Exists With This Email ??
+  const isPatientExists = await prisma.user.findUnique({
+    where: {
+      email: patient?.email,
+    },
+  });
+
+  if (isPatientExists) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "User Already Exits With This ID"
+    );
+  }
+
+  //  Generate hashed Password **
+  const hashedPassword = await hashPassword(
+    password,
+    Number(configs.bcrypt_slat_round) as number
+  );
+
+  //  User Payload :
+  const userData = {
+    email: patient.email,
+    password: hashedPassword,
+    role: UserRole.PATIENT,
+  };
+
+  //  Upload Profile Image For Patients **
+  if (file) {
+    const imageName = patient.email?.split(" ")[0];
+    const { secure_url } = await fileUploadHelper.sendImageToCloudinary(
+      imageName,
+      file?.path
+    );
+
+    patient.photoProfile = secure_url;
+  }
+
+  //  Create Paitent Into Database with User **
+  const result = await prisma.$transaction(async (tx) => {
+    const user = await tx.user.create({
+      data: {
+        ...userData,
+      },
+    });
+
+    const patientData = await tx.patient.create({
+      data: {
+        ...patient
+      },
+    });
+
+    return { patientData, user };
+  });
+
+  return result;
+};
 export const userServices = {
   createAdmin,
   createDoctor,
+  createPatient,
 };

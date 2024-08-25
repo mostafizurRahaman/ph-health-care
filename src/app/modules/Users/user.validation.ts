@@ -88,7 +88,39 @@ const createDoctor = z.object({
 });
 
 
+
+const createPatient = z.object({
+  body: z.object({
+    password: z.string({
+      required_error: validationMessages.password.required,
+      invalid_type_error: validationMessages.password.invalid_type,
+    }),
+    patient: z.object({
+      name: z.string({
+        required_error: validationMessages.name.required,
+        invalid_type_error: validationMessages.name.invalid_type,
+      }),
+
+      email: z.string({
+        required_error: validationMessages.email.required,
+        invalid_type_error: validationMessages.email.invalid_type,
+      }),
+      contactNumber: z.string({
+        required_error: validationMessages.contactNumber.required,
+        invalid_type_error: validationMessages.contactNumber.invalid_type,
+      }),
+      address: z
+        .string({
+          required_error: validationMessages.address.required,
+          invalid_type_error: validationMessages.address.invalid_type,
+        })
+        .optional(),
+    }),
+  }),
+});
+
 export const userValidationSchema = {
   createAdminValidationSchema,
-  createDoctor
+  createDoctor,
+  createPatient,
 };
