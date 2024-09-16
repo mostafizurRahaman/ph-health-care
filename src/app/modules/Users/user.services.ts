@@ -268,6 +268,7 @@ const getAllUsersFromDB = async (params: any, options: IPaginationOptions) => {
   };
 };
 
+//  Change My Profile Status **
 const changeProfileStatus = async (
   id: string,
   payload: { status: UserStatus }
@@ -279,20 +280,48 @@ const changeProfileStatus = async (
 
   await prisma.user.findUniqueOrThrow({
     where: {
-      id
-     }
-  })
+      id,
+    },
+  });
 
   const result = await prisma.user.update({
     where: {
-       id
+      id,
     },
     data: {
-       status : payload.status
-    }
-  })
+      status: payload.status,
+    },
+  });
 
-  return  result
+  return result;
+};
+
+interface IMyProfile {
+  email: string;
+  role: UserRole;
+}
+
+const getMyProfile = async (payload: IMyProfile) => {
+  const result = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: payload.email,
+      role: payload.role,
+    },
+    select: {
+      email: true,
+      id: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      role: true,
+      needsPasswordChange: true,
+      admin: true,
+      doctor: true,
+      patient: true,
+    },
+  });
+
+  return result;
 };
 
 export const userServices = {
@@ -301,4 +330,5 @@ export const userServices = {
   createPatient,
   getAllUsersFromDB,
   changeProfileStatus,
+  getMyProfile,
 };

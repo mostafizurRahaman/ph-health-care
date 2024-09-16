@@ -55,20 +55,27 @@ const getAllUsers = catchAsync(async (req, res, next) => {
   });
 });
 
-
-
-const changeUserStatus = catchAsync(async(req,res) => {
-   
-const id = req.params.id; 
- const result = await userServices.changeProfileStatus(id,req.body)
-sendResponse(res, {
+const changeUserStatus = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  const result = await userServices.changeProfileStatus(id, req.body);
+  sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "All User Retrieved Successfully!!!",
     data: result,
   });
-})
- 
+});
+
+const getMyProfile = catchAsync(async (req: Request & { user?: any }, res) => {
+  const user = req.user;
+  const result = await userServices.getMyProfile(user);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "My  Profile Retrieved Successfully!!!!!!",
+    data: result,
+  });
+});
 
 export const userController = {
   createAdmin,
@@ -76,4 +83,5 @@ export const userController = {
   createPatient,
   getAllUsers,
   changeUserStatus,
+  getMyProfile,
 };
