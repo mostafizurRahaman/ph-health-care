@@ -17,6 +17,7 @@ import configs from "../../configs";
 import { IPaginationOptions } from "../../interfaces/pagination";
 import calculatePagination from "../../utils/calculatePagination";
 import { userSearchableFields } from "./user.constraint";
+import { IReqUser } from "../../interfaces/global";
 
 //  Create Users **
 const createAdmin = async (payload: IAdminData, file: any) => {
@@ -301,11 +302,12 @@ interface IMyProfile {
   role: UserRole;
 }
 
-const getMyProfile = async (payload: IMyProfile) => {
+const getMyProfile = async (user: IMyProfile) => {
   const userInfo = await prisma.user.findUniqueOrThrow({
     where: {
-      email: payload.email,
-      role: payload.role,
+      email: user.email,
+      role: user.role,
+      status: UserStatus.ACTIVE,
     },
     select: {
       id: true,
@@ -348,6 +350,32 @@ const getMyProfile = async (payload: IMyProfile) => {
   };
 };
 
+const updateMyProfile = async (user: IReqUser, payload: ) => {
+  const userInfo = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: user?.email,
+      role: user?.role,
+      status: UserStatus.ACTIVE,
+    },
+  });
+
+  let profileInfo;
+  if (
+    userInfo.role === UserRole.ADMIN ||
+    userInfo.role === UserRole.SUPER_ADMIN
+  ) {
+    profileInfo = await prisma.admin.update({
+      where: {
+        email: userInfo.email,
+      },
+      data: payload,
+    });
+  } else if (userInfo.role === UserRole.DOCTOR) {
+  } else if (userInfo.role === UserRole.PATIENT) {
+  }
+  return {};
+};
+
 export const userServices = {
   createAdmin,
   createDoctor,
@@ -355,4 +383,5 @@ export const userServices = {
   getAllUsersFromDB,
   changeProfileStatus,
   getMyProfile,
+  updateMyProfile,
 };

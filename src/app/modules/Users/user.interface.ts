@@ -1,4 +1,4 @@
-import { Doctor, Patient } from "@prisma/client";
+import { Doctor, Gender, Patient } from "@prisma/client";
 import { IUserRole, IUserStatus } from "./user.constraint";
 
 export interface IUser {
@@ -22,15 +22,13 @@ export interface IAdminData {
   };
 }
 
-
-
-export interface IPaitentData { 
-  password: string, 
-  patient: Patient
+export interface IPaitentData {
+  password: string;
+  patient: Patient;
 }
-export interface IDoctorData { 
-  password: string, 
-  doctor: Doctor
+export interface IDoctorData {
+  password: string;
+  doctor: Doctor;
 }
 export interface IAdmin {
   id?: string;
@@ -41,4 +39,17 @@ export interface IAdmin {
   isDeleted: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface IProfileUpdateInfo {
+  name?: string;
+  profilePhoto?: string;
+  contactNumber?: string;
+  gender?: Gender;
+  registrationNumber?: string;
+  experience?: number;
+  appointmentFee?: number;
+  qualification?: string;
+  currentWorkingPlace?: string;
+  designation?: string;
 }

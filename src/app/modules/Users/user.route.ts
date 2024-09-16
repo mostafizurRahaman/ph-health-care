@@ -76,4 +76,20 @@ router.get(
   userController.getMyProfile
 );
 
+//  Update My Profile :
+router.patch(
+  "/update-my-profile",
+  fileUploadHelper.upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    console.log({
+      file: req.file,
+      data: req.body.data,
+    });
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
+  auth(UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT, UserRole.SUPER_ADMIN),
+  userController.updateMyProfile
+);
+
 export const userRoutes = router;
