@@ -71,7 +71,7 @@ router.patch(
 
 //  Get My Profile **
 router.get(
-  "/get-me",
+  "/me",
   auth(UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT, UserRole.SUPER_ADMIN),
   userController.getMyProfile
 );

@@ -302,26 +302,50 @@ interface IMyProfile {
 }
 
 const getMyProfile = async (payload: IMyProfile) => {
-  const result = await prisma.user.findUniqueOrThrow({
+  const userInfo = await prisma.user.findUniqueOrThrow({
     where: {
       email: payload.email,
       role: payload.role,
     },
     select: {
-      email: true,
       id: true,
-      status: true,
-      createdAt: true,
-      updatedAt: true,
-      role: true,
+      email: true,
       needsPasswordChange: true,
-      admin: true,
-      doctor: true,
-      patient: true,
+      role: true,
+      status: true,
     },
   });
 
-  return result;
+  let profileInfo;
+
+  //  Check Is By Role :
+  if (
+    userInfo.role === UserRole.ADMIN ||
+    userInfo.role === UserRole.SUPER_ADMIN
+  ) {
+    profileInfo = await prisma.admin.findUniqueOrThrow({
+      where: {
+        email: userInfo.email,
+      },
+    });
+  } else if (userInfo.role === UserRole.DOCTOR) {
+    profileInfo = await prisma.doctor.findUniqueOrThrow({
+      where: {
+        email: userInfo.email,
+      },
+    });
+  } else if (userInfo.role === UserRole.PATIENT) {
+    profileInfo = await prisma.doctor.findUniqueOrThrow({
+      where: {
+        email: userInfo.email,
+      },
+    });
+  }
+
+  return {
+    ...userInfo,
+    ...profileInfo,
+  };
 };
 
 export const userServices = {
